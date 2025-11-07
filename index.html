@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Pinyin Flashcards</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+
+        .flashcard {
+            width: 400px;
+            height: 200px;
+            background-color: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2em;
+            text-align: center;
+            padding: 20px;
+            transition: transform 0.5s;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 1em;
+            border: none;
+            border-radius: 6px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="flashcard" id="flashcard">Press "Start" to begin</div>
+    <button onclick="nextCard()">Next</button>
+</div>
+
+<script>
+    const pinyinWords = [
+        "wǒ","wǒmen","nǐ","tā","tā","zhè","zhèr","nà","nàr","nǎ","nǎr","shéi","shénme",
+        "duōshǎo","jǐ","zěnme","zěnmeyàng","yī","èr","sān","sì","wǔ","liù","qī","bā",
+        "jiǔ","shí","gè","suì","běn","xiē","kuài","bù","méi","hěn","tài","dōu","yīdiǎnr",
+        "hé","zài","de","le","ma","ne","wèi","jiā","xuéxiào","fàndiàn","shāngdiàn","yīyuàn",
+        "Zhōngguó","Běijīng","shàng","xià","qiánmiàn","hòumiàn","lǐmiàn","jīntiān","míngtiān",
+        "zuótiān","shàngwǔ","zhōngwǔ","xiàwǔ","nián","yuè","hào","xīngqī","diǎn","fēnzhōng",
+        "xiànzài","shíhou","bàba","māma","érzi","nǚér","lǎoshī","xuéshēng","tóngxué",
+        "péngyǒu","yīshēng","xiānsheng","xiǎojiě","yīfu","shuǐ","cài","mǐfàn","shuǐguǒ",
+        "píngguǒ","chá","bēizi","qián","fēijī","chūzūchē","diànshì","diànnǎo","diànyǐng",
+        "tiānqì","māo","gǒu","dōngxi","rén","míngzi","shū","hànyǔ","zì","zhuōzi","yǐzi",
+        "xièxie","búkèqì","zàijiàn","qǐng","duìbùqǐ","méiguānxì","shì","yǒu","kàn","tīng",
+        "shuō","dú","xiě","kànjiàn","jiào","lái","huí","qù","chī","hē","shuìjiào","dǎdiànhuà",
+        "zuò","mǎi","kāi","zuò","zhù","xuéxí","gōngzuò","xiàyǔ","ài","xǐhuān","xiǎng","rènshi",
+        "huì","néng","hǎo","dà","xiǎo","duō","shǎo","lěng","rè","gāoxìng","piàoliang"
+    ];
+
+    let index = 0;
+
+    function nextCard() {
+        document.getElementById('flashcard').textContent = pinyinWords[index];
+        index = (index + 1) % pinyinWords.length; // loop back to start
+    }
+</script>
+</body>
+</html>
