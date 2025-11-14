@@ -1,97 +1,301 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Pinyin Flashcards</title>
-<style>
-body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    background: #f0f0f0;
-    font-family: Arial, sans-serif;
-}
-
-.container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.flashcard-container {
-    perspective: 1000px;
-}
-
-.flashcard {
-    width: 400px;
-    height: 200px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2em;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.6s;
-    transform-style: preserve-3d;
-    position: relative;
-    background-color: #fff;
-}
-
-.flashcard .front, .flashcard .back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    backface-visibility: hidden;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 12px;
-    padding: 20px;
-    box-sizing: border-box;
-}
-
-.flashcard .back {
-    transform: rotateY(180deg);
-    font-size: 1.5em;
-    flex-direction: column;
-}
-
-.flashcard.flip {
-    transform: rotateY(180deg);
-}
-
-button {
-    margin-top: 20px;
-    padding: 10px 20px;
-    font-size: 1em;
-    border: none;
-    border-radius: 6px;
-    background-color: #4CAF50;
-    color: white;
-    cursor: pointer;
-}
-
-button:hover { background-color: #45a049; }
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HSK Flashcards</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #7f1d1d 0%, #991b1b 50%, #c2410c 100%);
+      min-height: 100vh;
+      color: white;
+      padding: 1rem;
+    }
+    
+    .container {
+      max-width: 42rem;
+      margin: 0 auto;
+      padding: 2rem 0;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .title {
+      font-size: 3rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .subtitle {
+      color: #fecaca;
+      font-size: 1.125rem;
+    }
+    
+    .controls {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    
+    label {
+      display: block;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      color: #fecaca;
+    }
+    
+    select {
+      width: 100%;
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      background: rgba(127, 29, 29, 0.5);
+      border: 1px solid #991b1b;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+    
+    select option {
+      background: #7f1d1d;
+      color: white;
+    }
+    
+    .button-row {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .button {
+      flex: 1;
+      padding: 0.5rem 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 0.5rem;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .progress-container {
+      margin-bottom: 1rem;
+    }
+    
+    .progress-text {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.875rem;
+      margin-bottom: 0.5rem;
+      color: #fecaca;
+    }
+    
+    .progress-bar {
+      width: 100%;
+      height: 0.5rem;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 9999px;
+      overflow: hidden;
+    }
+    
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, #fbbf24 0%, #f97316 100%);
+      transition: width 0.3s;
+    }
+    
+    .card-container {
+      position: relative;
+      margin-bottom: 1.5rem;
+    }
+    
+    .star-button {
+      position: absolute;
+      top: -1rem;
+      right: -1rem;
+      z-index: 10;
+      padding: 0.75rem;
+      border-radius: 9999px;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .star-button.starred {
+      background: #eab308;
+      color: white;
+    }
+    
+    .star-button.unstarred {
+      background: rgba(255, 255, 255, 0.2);
+      color: rgba(255, 255, 255, 0.6);
+    }
+    
+    .star-button:hover {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .card-wrapper {
+      width: 100%;
+      height: 24rem;
+      cursor: pointer;
+      perspective: 1000px;
+    }
+    
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      transition: transform 0.5s;
+      transform-style: preserve-3d;
+    }
+    
+    .card-inner.flipped {
+      transform: rotateY(180deg);
+    }
+    
+    .card-face {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0.1) 100%);
+      backdrop-filter: blur(10px);
+      border-radius: 1.5rem;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .card-back {
+      transform: rotateY(180deg);
+    }
+    
+    .pinyin {
+      font-size: 3.75rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #fde047;
+    }
+    
+    .hanzi-large {
+      font-size: 4.5rem;
+      font-weight: bold;
+      color: #fde047;
+    }
+    
+    .hanzi {
+      font-size: 5rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .hanzi-pinyin {
+      font-size: 1.875rem;
+      color: #fde047;
+      margin-bottom: 0.5rem;
+    }
+    
+    .english {
+      font-size: 1.5rem;
+      color: #fecaca;
+    }
+    
+    .flip-hint {
+      color: #fecaca;
+      font-size: 0.875rem;
+      margin-top: 1rem;
+    }
+    
+    .empty-state {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    
+    .nav-container {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    
+    .nav-button {
+      padding: 0.75rem 1.5rem;
+      background: rgba(255, 255, 255, 0.2);
+      border: none;
+      border-radius: 0.75rem;
+      color: white;
+      font-size: 1.125rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .nav-button:hover:not(:disabled) {
+      background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .nav-button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    .nav-counter {
+      flex: 1;
+      text-align: center;
+      font-size: 1.125rem;
+      font-weight: 600;
+    }
+    
+    .star-icon {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+  </style>
 </head>
 <body>
+  <div id="root"></div>
 
-<div class="container">
-    <div class="flashcard-container">
-        <div class="flashcard" id="flashcard" onclick="flipCard()">
-            <div class="front" id="front">Click to flip</div>
-            <div class="back" id="back"></div>
-        </div>
-    </div>
-    <button onclick="nextCard()">Next</button>
-</div>
+  <script type="text/babel">
+    const { useState, useEffect } = React;
 
-<script>
-const flashcards = [
+    const levels = {
+      "HSK 1": [
   { "pinyin": "wǒ",       "hanzi": "我",       "english": "I, me" },
   { "pinyin": "wǒmen",    "hanzi": "我们",     "english": "we, us" },
   { "pinyin": "nǐ",       "hanzi": "你",       "english": "you" },
@@ -127,7 +331,7 @@ const flashcards = [
   { "pinyin": "suì",      "hanzi": "岁",       "english": "year (of age)" },
   { "pinyin": "běn",      "hanzi": "本",       "english": "volume; measure word for books" },
   { "pinyin": "xiē",      "hanzi": "些",       "english": "some" },
-  { "pinyin": "kuài",     "hanzi": "块",       "english": "piece; basic unit money" },
+  { "pinyin": "kuài",     "hanzi": "块",       "english": "piece; basic unit of money" },
   { "pinyin": "bù",       "hanzi": "不",       "english": "no; not" },
   { "pinyin": "méi",      "hanzi": "没",       "english": "no; not (have)" },
   { "pinyin": "hěn",      "hanzi": "很",       "english": "quite; very" },
@@ -249,67 +453,237 @@ const flashcards = [
   { "pinyin": "qù", "hanzi": "去", "english": "to go" },
   { "pinyin": "Běijīng", "hanzi": "北京", "english": "Beijing" },
   { "pinyin": "zhù", "hanzi": "住", "english": "to live; to stay" },
-  { "pinyin": "yīdiǎnr", "hanzi": "一点儿", "english": "a little; a bit" },
-  { "pinyin": "cháng",      "hanzi": "长",        "english": "long" },
-  { "pinyin": "hǎochī",     "hanzi": "好吃",      "english": "delicious" },
-  { "pinyin": "kāfēi",      "hanzi": "咖啡",      "english": "coffee" },
-  { "pinyin": "mài",        "hanzi": "卖",        "english": "to sell" },
-  { "pinyin": "qùnián",     "hanzi": "去年",      "english": "last year" },
-  { "pinyin": "piào",       "hanzi": "票",        "english": "ticket" },
-  { "pinyin": "shēngrì",    "hanzi": "生日",      "english": "birthday" },
-  { "pinyin": "nǚrén",      "hanzi": "女人",      "english": "woman" },
-  { "pinyin": "ba",         "hanzi": "吧",        "english": "sentence particle" },
-  { "pinyin": "chū",        "hanzi": "出",        "english": "to go out" },
-  { "pinyin": "mén",        "hanzi": "门",        "english": "gate" },
-  { "pinyin": "yào",        "hanzi": "要",        "english": "to want" },
-  { "pinyin": "zhī",        "hanzi": "只",        "english": "count animal" },
-  { "pinyin": "jiějie",     "hanzi": "姐姐",      "english": "elder sister" },
-  { "pinyin": "gāo",        "hanzi": "高",        "english": "tall" },
-  { "pinyin": "yě",         "hanzi": "也",        "english": "also" },
-  { "pinyin": "bǎi",        "hanzi": "百",        "english": "100" },
-  { "pinyin": "bái",        "hanzi": "白",        "english": "bright" },
-  { "pinyin": "dàjiā",      "hanzi": "大家",      "english": "everyone" },
-  { "pinyin": "duì",        "hanzi": "对",        "english": "correct" }
-];
+  { "pinyin": "yīdiǎnr", "hanzi": "一点儿", "english": "a little; a bit" }
+],
+      "HSK 2": [
+  { "pinyin": "guī", "hanzi": "龟", "english": "turtle" },
+  { "pinyin": "liǎng", "hanzi": "两", "english": "two (used with measure words)" },
+  { "pinyin": "qiān", "hanzi": "千", "english": "1000" }, 
+  { "pinyin": "huì",      "hanzi": "会",       "english": "will" },
+  { "pinyin": "líng",     "hanzi": "零",       "english": "zero" },
+  { "pinyin": "cháng",    "hanzi": "长",       "english": "long" },
+  { "pinyin": "hǎochī",   "hanzi": "好吃",     "english": "delicious" },
+  { "pinyin": "kāfēi",    "hanzi": "咖啡",     "english": "coffee" },
+  { "pinyin": "mài",      "hanzi": "卖",       "english": "to sell" },
+  { "pinyin": "shuōhuà",  "hanzi": "说话",     "english": "to say" },
+  { "pinyin": "rì",       "hanzi": "日",       "english": "day" },
+  { "pinyin": "qùnián",   "hanzi": "去年",     "english": "last year" },
+  { "pinyin": "piào",     "hanzi": "票",       "english": "ticket" },
+  { "pinyin": "shēngrì",  "hanzi": "生日",     "english": "birthday" },
+  { "pinyin": "nǚrén",    "hanzi": "女人",     "english": "woman" },
+  { "pinyin": "ba",       "hanzi": "吧",       "english": "sentence particle" },
+  { "pinyin": "chū",      "hanzi": "出",       "english": "to go out" },
+  { "pinyin": "mén",      "hanzi": "门",       "english": "gate" },
+  { "pinyin": "yào",      "hanzi": "要",       "english": "to want" },
+  { "pinyin": "zài",      "hanzi": "在",       "english": "to be there" },
+  { "pinyin": "zhī",      "hanzi": "只",       "english": "count animal" },
+  { "pinyin": "jiějie",   "hanzi": "姐姐",     "english": "elder sister" },
+  { "pinyin": "gāo",      "hanzi": "高",       "english": "tall" },
+  { "pinyin": "yě",       "hanzi": "也",       "english": "also" },
+  { "pinyin": "bǎi",      "hanzi": "百",       "english": "100" },
+  { "pinyin": "bái",      "hanzi": "白",       "english": "bright" },
+  { "pinyin": "dàjiā",    "hanzi": "大家",     "english": "everyone" },
+  { "pinyin": "duì",      "hanzi": "对",       "english": "correct" }, 
+  { "pinyin": "fúwùyuán", "hanzi": "服务员", "english": "waiter/waitress; server" },
+  { "pinyin": "jīdàn", "hanzi": "鸡蛋", "english": "egg" },
+  { "pinyin": "xīguā", "hanzi": "西瓜", "english": "watermelon" },
+  { "pinyin": "yángròu", "hanzi": "羊肉", "english": "mutton; lamb" },
+  { "pinyin": "yú", "hanzi": "鱼", "english": "fish" },
+  { "pinyin": "tīzúqiú", "hanzi": "踢足球", "english": "to play soccer" },
+  { "pinyin": "dǎlánqiú", "hanzi": "打篮球", "english": "to play basketball" },
+  { "pinyin": "yīqǐ", "hanzi": "一起", "english": "together" },
+  { "pinyin": "juéde", "hanzi": "觉得", "english": "to feel; to think" },
+  { "pinyin": "pǎobù", "hanzi": "跑步", "english": "to run; running" },
+  { "pinyin": "yóuyǒng", "hanzi": "游泳", "english": "to swim" },
+  { "pinyin": "yùndòng", "hanzi": "运动", "english": "sport; exercise" },
+  { "pinyin": "zǒu", "hanzi": "走", "english": "to walk; to go" },
+  { "pinyin": "zhīdào", "hanzi": "知道", "english": "to know" },
+  { "pinyin": "gēge", "hanzi": "哥哥", "english": "elder brother" },
+  { "pinyin": "cí", "hanzi": "词", "english": "word; term" },
+  { "pinyin": "gōnggòngqìchē", "hanzi": "公共汽车", "english": "bus; public transport" },
+  { "pinyin": "yòubiān", "hanzi": "右边", "english": "right side" },
+  { "pinyin": "zuǒbiān", "hanzi": "左边", "english": "left side" },
+  { "pinyin": "bīnguǎn", "hanzi": "宾馆", "english": "hotel" },
+  { "pinyin": "guò", "hanzi": "过", "english": "to pass; to celebrate (a holiday/birthday)" }
+      ],
+      "HSK 3": [
+        { "pinyin": "not available yet", "hanzi": "", "english": "" }
+      ]
+    };
 
-let index = 0;
-const flashcard = document.getElementById('flashcard');
-const front = document.getElementById('front');
-const back = document.getElementById('back');
-
-// Initialize first card
-function showCard() {
-    flashcard.classList.remove('flip');
-    const card = flashcards[index];
-    front.textContent = card.pinyin;
-    back.innerHTML = `${card.hanzi}<br>${card.english}`;
-}
-showCard();
-
-// Flip card on click
-function flipCard() {
-    flashcard.classList.toggle('flip');
-}
-
-// Move to next card
-function nextCard() {
-    // If currently flipped, flip back first and wait for transition
-    if (flashcard.classList.contains('flip')) {
-        flashcard.classList.remove('flip');
-        setTimeout(updateCardContent, 600); // wait for flip animation to finish
-    } else {
-        updateCardContent();
+    function StarIcon({ filled }) {
+      return (
+        <svg className="star-icon" viewBox="0 0 24 24" fill={filled ? "currentColor" : "none"} stroke="currentColor" strokeWidth="2">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+        </svg>
+      );
     }
-}
 
-// Update card content
-function updateCardContent() {
-    index = (index + 1) % flashcards.length;
-    const card = flashcards[index];
-    front.textContent = card.pinyin;
-    back.innerHTML = `${card.hanzi}<br>${card.english}`;
-}
-</script>
+    function App() {
+      const [selectedLevel, setSelectedLevel] = useState("HSK 1");
+      const [index, setIndex] = useState(0);
+      const [flip, setFlip] = useState(false);
+      const [studyMode, setStudyMode] = useState("browse");
+      const [starredCards, setStarredCards] = useState(new Set());
+      const [shuffled, setShuffled] = useState(false);
+      const [cardOrder, setCardOrder] = useState([]);
+      const [showPinyin, setShowPinyin] = useState(true);
 
+      const cards = levels[selectedLevel];
+      const displayCards = studyMode === "starred" 
+        ? cards.filter((_, i) => starredCards.has(`${selectedLevel}-${i}`))
+        : cards;
+      
+      const orderedCards = shuffled && cardOrder.length > 0 
+        ? cardOrder.map(i => displayCards[i])
+        : displayCards;
+      
+      const card = orderedCards[index] || displayCards[0];
+      const cardKey = `${selectedLevel}-${cards.indexOf(card)}`;
+
+      useEffect(() => {
+        setIndex(0);
+        setFlip(false);
+        setShuffled(false);
+        setCardOrder([]);
+      }, [selectedLevel, studyMode]);
+
+      const toggleStar = () => {
+        const newStarred = new Set(starredCards);
+        if (newStarred.has(cardKey)) {
+          newStarred.delete(cardKey);
+        } else {
+          newStarred.add(cardKey);
+        }
+        setStarredCards(newStarred);
+      };
+
+      const shuffleCards = () => {
+        const indices = Array.from({ length: displayCards.length }, (_, i) => i);
+        for (let i = indices.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [indices[i], indices[j]] = [indices[j], indices[i]];
+        }
+        setCardOrder(indices);
+        setShuffled(true);
+        setIndex(0);
+        setFlip(false);
+      };
+
+      const resetOrder = () => {
+        setShuffled(false);
+        setCardOrder([]);
+        setIndex(0);
+        setFlip(false);
+      };
+
+      const next = () => {
+        setFlip(false);
+        if (index < orderedCards.length - 1) setIndex(index + 1);
+      };
+
+      const back = () => {
+        setFlip(false);
+        if (index > 0) setIndex(index - 1);
+      };
+
+      const progress = orderedCards.length > 0 ? ((index + 1) / orderedCards.length) * 100 : 0;
+
+      return (
+        <div className="container">
+          <div className="header">
+            <h1 className="title">汉语 HSK</h1>
+            <p className="subtitle">Chinese Flashcards</p>
+          </div>
+
+          <div className="controls">
+            <div className="grid">
+              <div>
+                <label>Level</label>
+                <select value={selectedLevel} onChange={(e) => setSelectedLevel(e.target.value)}>
+                  <option value="HSK 1">HSK 1 (150 words)</option>
+                  <option value="HSK 2">HSK 2 (150 words)</option>
+                  <option value="HSK 3">HSK 3 (300 words)</option>
+                </select>
+              </div>
+              <div>
+                <label>Study Mode</label>
+                <select value={studyMode} onChange={(e) => setStudyMode(e.target.value)}>
+                  <option value="browse">Browse All</option>
+                  <option value="starred">Starred Only ({starredCards.size})</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="button-row">
+              <button className="button" onClick={shuffled ? resetOrder : shuffleCards}>
+                {shuffled ? "🔄 Reset" : "🔀 Shuffle"}
+              </button>
+              <button className="button" onClick={() => setShowPinyin(!showPinyin)}>
+                {showPinyin ? "Hide" : "Show"} Pinyin
+              </button>
+            </div>
+          </div>
+
+          <div className="progress-container">
+            <div className="progress-text">
+              <span>Card {index + 1} of {orderedCards.length}</span>
+              <span>{Math.round(progress)}%</span>
+            </div>
+            <div className="progress-bar">
+              <div className="progress-fill" style={{ width: `${progress}%` }}></div>
+            </div>
+          </div>
+
+          {orderedCards.length > 0 ? (
+            <div className="card-container">
+              <button
+                onClick={toggleStar}
+                className={`star-button ${starredCards.has(cardKey) ? 'starred' : 'unstarred'}`}
+              >
+                <StarIcon filled={starredCards.has(cardKey)} />
+              </button>
+
+              <div className="card-wrapper" onClick={() => setFlip(!flip)}>
+                <div className={`card-inner ${flip ? 'flipped' : ''}`}>
+                  <div className="card-face">
+                    {showPinyin && <div className="pinyin">{card.pinyin}</div>}
+                    {!showPinyin && <div className="hanzi-large">{card.hanzi}</div>}
+                    <div className="flip-hint">Click to flip</div>
+                  </div>
+
+                  <div className="card-face card-back">
+                    <div className="hanzi">{card.hanzi}</div>
+                    <div className="hanzi-pinyin">{card.pinyin}</div>
+                    <div className="english">{card.english}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className="empty-state">
+              <p>No cards in this selection. Star some cards to study them!</p>
+            </div>
+          )}
+
+          {orderedCards.length > 0 && (
+            <div className="nav-container">
+              <button className="nav-button" onClick={back} disabled={index === 0}>
+                Back
+              </button>
+              <div className="nav-counter">
+                {index + 1} / {orderedCards.length}
+              </div>
+              <button className="nav-button" onClick={next} disabled={index === orderedCards.length - 1}>
+                Next
+              </button>
+            </div>
+          )}
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
 </body>
 </html>
