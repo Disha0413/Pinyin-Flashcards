@@ -2,6 +2,9 @@ HSK Flashcards
 
 HSK Flashcards is a web-based React app for learning Chinese vocabulary from HSK levels 1–3. Users can browse, shuffle, and star flashcards to customize their study sessions.
 
+<img width="1896" height="913" alt="image" src="https://github.com/user-attachments/assets/72551fab-c1c9-48a5-871d-88518f47ca10" />
+
+
 Features
 
 Browse vocabulary by HSK Level (1–3).
